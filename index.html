@@ -80,7 +80,11 @@ async function openDetail(id){const {data:a,error}=await sb.from("anime").select
 async function watchEpisode(id){
   const e=(selectedAnime.episodes||[]).find(x=>x.id===id);
   if(!e)return;
-
+sessionStorage.setItem("nekostream_last_page",JSON.stringify({
+  view:"watch",
+  animeId:selectedAnime.id,
+  episodeId:e.id
+}));
   $("watchHeading").textContent=selectedAnime.title+" — Episode "+e.episode_number;
 
   $("player").innerHTML="";
@@ -186,8 +190,33 @@ $("eAnime").addEventListener("change",renderEpisodeList);
 async function renderEpisodeList(){const id=$("eAnime").value;if(!id){$("episodeList").innerHTML="";return}const {data,error}=await sb.from("episodes").select("*").eq("anime_id",id).order("episode_number");if(error){$("episodeList").textContent=error.message;return}$("episodeList").innerHTML=(data||[]).map(e=>`<div class="rowitem"><div><b>Episode ${e.episode_number}${e.title?" — "+safe(e.title):""}</b><small>${e.is_published?"Publik":"Draft"}</small></div><button class="btn danger" onclick="deleteEpisode('${e.id}')">Hapus</button></div>`).join("")||'<p class="muted">Belum ada episode.</p>'}
 $("episodeForm").addEventListener("submit",async e=>{e.preventDefault();const payload={anime_id:$("eAnime").value,episode_number:Number($("eNumber").value),title:$("eTitle").value.trim()||null,video_url:$("eVideo").value.trim()||null,is_published:$("ePublished").value==="true"};const {error}=await sb.from("episodes").insert(payload);if(error){setStatus("Gagal menyimpan episode: "+error.message,"error");return}setStatus("Episode berhasil disimpan.","ok");$("eNumber").value="";$("eTitle").value="";$("eVideo").value="";await renderEpisodeList();await loadAdminData();await loadAnime()});
 async function deleteEpisode(id){if(!confirm("Hapus episode ini?"))return;const {error}=await sb.from("episodes").delete().eq("id",id);if(error){setStatus("Gagal menghapus episode: "+error.message,"error");return}await renderEpisodeList();await loadAdminData();await loadAnime()}
-sb.auth.onAuthStateChange((_event,session)=>{if(location.hash==="#admin"&&session)checkSession()});
-if(location.hash==="#admin")showAdmin();else loadAnime();
+sb.auth.onAuthStateChange((_event,session)=>{
+  if(location.hash==="#admin")showAdmin();
+});
+
+(async()=>{
+  if(location.hash==="#admin"){
+    showAdmin();
+  }else{
+    await loadAnime();
+    await restoreLastPage();
+  }
+})();
+   async function restoreLastPage(){
+  const saved=sessionStorage.getItem("nekostream_last_page");
+  if(!saved)return;
+
+  try{
+    const page=JSON.parse(saved);
+
+    if(page.view==="watch" && page.animeId && page.episodeId){
+      await openDetail(page.animeId);
+      await watchEpisode(page.episodeId);sessionStorage.removeItem("nekostream_last_page");
+    }
+  }catch(error){
+    sessionStorage.removeItem("nekostream_last_page");
+  }
+   }
 </script>
 </body>
 </html>
