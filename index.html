@@ -76,7 +76,45 @@ async function loadAnime(){const {data,error}=await sb.from("anime").select("id,
 function renderCatalog(){const q=($("search").value||"").toLowerCase();const genres=["Semua",...new Set(animeRows.flatMap(a=>a.genres||[]))];$("filters").innerHTML=genres.map(g=>`<button class="filter ${g===activeGenre?"active":""}" onclick="chooseGenre('${safe(g).replace(/'/g,"&#39;")}')">${safe(g)}</button>`).join("");const list=animeRows.filter(a=>(activeGenre==="Semua"||(a.genres||[]).includes(activeGenre))&&a.title.toLowerCase().includes(q));$("count").textContent=list.length+" judul";$("animeGrid").innerHTML=list.length?list.map(a=>`<article class="card" onclick="openDetail('${a.id}')">${poster(a)}<div class="cardbody"><b>${safe(a.title)}</b><small>${safe(a.release_year||"—")} • ${safe((a.genres||[])[0]||"Anime")}</small></div></article>`).join(""):`<div class="empty">Belum ada anime yang dipublikasikan.</div>`}
 function chooseGenre(g){activeGenre=g;renderCatalog()}
 async function openDetail(id){const {data:a,error}=await sb.from("anime").select("*,episodes(*)").eq("id",id).eq("is_published",true).single();if(error||!a)return;selectedAnime=a;const eps=(a.episodes||[]).filter(e=>e.is_published).sort((x,y)=>x.episode_number-y.episode_number);$("detailContent").innerHTML=`<div class="panel detail"><div>${poster({...a,episode_count:eps.length})}</div><div><h1 style="margin:0 0 5px">${safe(a.title)}</h1><div class="muted">${safe(a.release_year||"")} • ${safe(a.status)}</div><p class="tags">${(a.genres||[]).map(g=>`<span>${safe(g)}</span>`).join("")}</p><p>${safe(a.synopsis||"Belum ada sinopsis.")}</p></div></div><div class="sectionhead"><h2>Daftar Episode</h2><span class="muted">${eps.length} episode</span></div><div class="episodes">${eps.length?eps.map(e=>`<button class="episode" onclick="watchEpisode('${e.id}')">Episode ${e.episode_number}${e.title?" — "+safe(e.title):""} →</button>`).join(""):'<div class="empty">Belum ada episode yang dipublikasikan.</div>'}</div>`;switchView("detailView")}
-async function watchEpisode(id){const e=(selectedAnime.episodes||[]).find(x=>x.id===id);if(!e)return;$("watchHeading").textContent=selectedAnime.title+" — Episode "+e.episode_number;$("player").innerHTML="";if(e.video_url){let url=e.video_url; if(/\.(mp4|webm)(\?.*)?$/i.test(url)){$("player").innerHTML=`<video controls playsinline src="${safe(url)}"></video>`}else{$("player").innerHTML=`<iframe src="${safe(url)}" allowfullscreen loading="lazy" referrerpolicy="no-referrer"></iframe>`}}else{$("player").innerHTML='<span class="muted">Belum ada URL video untuk episode ini.</span>'}switchView("watchView")}
+
+async function watchEpisode(id){
+  const e=(selectedAnime.episodes||[]).find(x=>x.id===id);
+  if(!e)return;
+
+  $("watchHeading").textContent=
+    selectedAnime.title+" — Episode "+e.episode_number;
+
+  $("player").innerHTML="";
+
+  if(e.video_url){
+    let url=e.video_url;
+
+    try{
+      const parsed=new URL(url);
+      if(!["http:","https:"].includes(parsed.protocol)){
+        throw new Error("URL tidak valid");
+      }
+
+      $("player").innerHTML=`
+        <a class="btn"
+           href="${safe(url)}"
+           target="_blank"
+           rel="noopener noreferrer"
+           style="text-decoration:none">
+          ↓ Download Episode
+        </a>`;
+    }catch{
+      $("player").innerHTML=
+        '<span class="muted">URL episode tidak valid.</span>';
+    }
+  }else{
+    $("player").innerHTML=
+      '<span class="muted">Belum ada URL video untuk episode ini.</span>';
+  }
+
+  switchView("watchView");
+}
+
 function backDetail(){switchView("detailView")}
 async function checkSession(){const {data:{session}}=await sb.auth.getSession();if(!session){$("loginPanel").classList.remove("hidden");$("adminPanel").classList.add("hidden");setStatus("Silakan login menggunakan akun admin.");return}const {data,isError,error}=await sb.rpc("is_nekostream_admin");if(error||data!==true){await sb.auth.signOut();$("loginPanel").classList.remove("hidden");$("adminPanel").classList.add("hidden");setStatus("Akun ini tidak terdaftar sebagai admin. Periksa konfigurasi admin_users.","error");return}$("loginPanel").classList.add("hidden");$("adminPanel").classList.remove("hidden");setStatus("Login berhasil. Hak administrator terverifikasi.","ok");await loadAdminData()}
 $("loginForm").addEventListener("submit",async e=>{e.preventDefault();setStatus("Memeriksa akun...");const {error}=await sb.auth.signInWithPassword({email:$("loginEmail").value,password:$("loginPassword").value});if(error){setStatus("Login gagal: "+error.message,"error");return}await checkSession()});
