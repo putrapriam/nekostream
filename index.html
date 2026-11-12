@@ -68,7 +68,9 @@ function switchView(id){["homeView","detailView","watchView","adminView"].forEac
 function showHome(){switchView("homeView");renderCatalog();if(location.hash!=="")history.replaceState(null,"",location.pathname)}
 function showAdmin(){switchView("adminView");history.replaceState(null,"","#admin");checkSession()}
 function setStatus(msg,type=""){const el=$("adminStatus");el.textContent=msg;el.className="status "+type}
-function posterStyle(a){return a.poster_url?`background-image:linear-gradient(0deg,#070a10c9,transparent 70%),url("${safe(a.poster_url)}")`:""}
+function posterStyle(a){
+ return a.poster_url ? `background-image:url('${a.poster_url}');` : "";
+}
 function poster(a){return `<div class="poster" style="${posterStyle(a)}"><span class="epcount">${Number(a.episode_count||0)} EP</span><strong>${safe(a.title)}</strong></div>`}
 async function loadAnime(){const {data,error}=await sb.from("anime").select("id,title,slug,synopsis,poster_url,genres,release_year,status,is_published,episodes(id)").eq("is_published",true).order("created_at",{ascending:false});if(error){$("animeGrid").innerHTML=`<div class="empty">Gagal memuat katalog: ${safe(error.message)}</div>`;$("count").textContent="";return}animeRows=(data||[]).map(a=>({...a,episode_count:a.episodes?.length||0}));renderCatalog()}
 function renderCatalog(){const q=($("search").value||"").toLowerCase();const genres=["Semua",...new Set(animeRows.flatMap(a=>a.genres||[]))];$("filters").innerHTML=genres.map(g=>`<button class="filter ${g===activeGenre?"active":""}" onclick="chooseGenre('${safe(g).replace(/'/g,"&#39;")}')">${safe(g)}</button>`).join("");const list=animeRows.filter(a=>(activeGenre==="Semua"||(a.genres||[]).includes(activeGenre))&&a.title.toLowerCase().includes(q));$("count").textContent=list.length+" judul";$("animeGrid").innerHTML=list.length?list.map(a=>`<article class="card" onclick="openDetail('${a.id}')">${poster(a)}<div class="cardbody"><b>${safe(a.title)}</b><small>${safe(a.release_year||"—")} • ${safe((a.genres||[])[0]||"Anime")}</small></div></article>`).join(""):`<div class="empty">Belum ada anime yang dipublikasikan.</div>`}
