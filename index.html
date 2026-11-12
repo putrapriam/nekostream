@@ -147,13 +147,13 @@ async function watchEpisode(id){
 
       groups[key].forEach(d=>{
         html+=`
-          <a class="btn"
-             href="${safe(d.download_url)}"
-             target="_blank"
-             rel="noopener noreferrer"
-             style="text-decoration:none">
-            ${safe(d.server_name)}
-          </a>
+          <a href="${safe(d.download_url)}"
+target="_blank"
+rel="noopener noreferrer"
+style="color:#4b8fc5;text-decoration:none;padding:5px 8px">
+${safe(d.server_name)}
+</a>
+<span style="color:#777">|</span>
         `;
       });
 
