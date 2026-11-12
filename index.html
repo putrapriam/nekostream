@@ -81,36 +81,92 @@ async function watchEpisode(id){
   const e=(selectedAnime.episodes||[]).find(x=>x.id===id);
   if(!e)return;
 
-  $("watchHeading").textContent=
-    selectedAnime.title+" — Episode "+e.episode_number;
+  $("watchHeading").textContent=selectedAnime.title+" — Episode "+e.episode_number;
 
   $("player").innerHTML="";
+  const oldDownload=document.getElementById("downloadArea");
+  if(oldDownload)oldDownload.remove();
 
+  // BAGIAN STREAMING
   if(e.video_url){
-    let url=e.video_url;
-
+    const url=e.video_url;
     try{
       const parsed=new URL(url);
       if(!["http:","https:"].includes(parsed.protocol)){
         throw new Error("URL tidak valid");
       }
 
-      $("player").innerHTML=`
-        <a class="btn"
-           href="${safe(url)}"
-           target="_blank"
-           rel="noopener noreferrer"
-           style="text-decoration:none">
-          ↓ Download Episode
-        </a>`;
-    }catch{
-      $("player").innerHTML=
-        '<span class="muted">URL episode tidak valid.</span>';
+      if(/\.(mp4|webm)(\?.*)?$/i.test(url)){
+        $("player").innerHTML=
+          `<video controls playsinline style="width:100%;max-height:500px" src="${safe(url)}"></video>`;
+      }else{
+        $("player").innerHTML=
+          `<iframe src="${safe(url)}" allowfullscreen loading="lazy" style="width:100%;aspect-ratio:16/9;border:0"></iframe>`;
+      }
+    }catch(err){
+      $("player").innerHTML='<span class="muted">URL streaming tidak valid.</span>';
     }
   }else{
-    $("player").innerHTML=
-      '<span class="muted">Belum ada URL video untuk episode ini.</span>';
+    $("player").innerHTML='<span class="muted">Belum ada URL streaming.</span>';
   }
+
+  // AMBIL DATA DOWNLOAD DARI SUPABASE
+  const {data:downloads,error}=await sb
+    .from("episode_downloads")
+    .select("*")
+    .eq("episode_id",e.id)
+    .eq("is_published",true)
+    .order("sort_order");
+
+  let html=`
+    <div id="downloadArea" style="margin-top:20px;padding:15px;background:var(--panel);border-radius:10px">
+      <h3 style="margin:0 0 15px">Download Episode</h3>
+  `;
+
+  if(error){
+    html+='<p class="muted">Gagal memuat link download.</p>';
+  }else if(!downloads||downloads.length===0){
+    html+='<p class="muted">Belum ada link download.</p>';
+  }else{
+    const groups={};
+
+    downloads.forEach(d=>{
+      const key=(d.format||"MP4")+" "+(d.quality||"");
+      if(!groups[key])groups[key]=[];
+      groups[key].push(d);
+    });
+
+    Object.keys(groups).forEach(key=>{
+      html+=`
+        <div style="margin-bottom:18px">
+          <div style="background:#555;color:white;padding:10px;text-align:center;font-weight:bold;border-radius:5px;margin-bottom:10px">
+            ${safe(key)}
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:10px">
+      `;
+
+      groups[key].forEach(d=>{
+        html+=`
+          <a class="btn"
+             href="${safe(d.download_url)}"
+             target="_blank"
+             rel="noopener noreferrer"
+             style="text-decoration:none">
+            ${safe(d.server_name)}
+          </a>
+        `;
+      });
+
+      html+=`
+          </div>
+        </div>
+      `;
+    });
+  }
+
+  html+='</div>';
+
+  $("player").insertAdjacentHTML("afterend",html);
 
   switchView("watchView");
 }
