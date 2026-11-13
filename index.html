@@ -52,7 +52,16 @@
 <div class="sectionhead" id="catalog"><h2>Daftar Anime</h2><span class="muted" id="count">Memuat...</span></div>
 <div class="filters" id="filters"></div><div class="grid" id="animeGrid"><div class="empty">Menghubungkan ke database...</div></div>
 </section>
-<section id="detailView" class="hidden"><button class="btn secondary" onclick="showHome()">← Kembali</button><div id="detailContent" style="margin-top:14px"></div></section>
+<section id="directoryView" class="hidden">
+  <div class="sectionhead">
+    <h2>Daftar Anime A–Z</h2>
+    <span class="muted" id="directoryCount"></span>
+  </div>
+
+  <div id="alphabetNav" class="filters"></div>
+
+  <div id="directoryList"></div>
+</section><section id="detailView" class="hidden"><button class="btn secondary" onclick="showHome()">← Kembali</button><div id="detailContent" style="margin-top:14px"></div></section>
 <section id="watchView" class="hidden"><button class="btn secondary" onclick="backDetail()">← Kembali ke detail</button><h2 id="watchHeading"></h2><div class="player" id="player"><span class="muted">Pemutar video</span></div><p class="notice">Gunakan tautan video yang kamu miliki hak untuk distribusikan atau yang mengizinkan penyematan.</p></section>
 <section id="adminView" class="hidden"><div class="adminwrap">
 <div class="adminbar"><div><div class="eyebrow">NEKOSTREAM CONTROL</div><h2 style="margin:3px 0">Dashboard Admin</h2></div><button class="btn secondary" onclick="showHome()">Lihat website</button></div>
