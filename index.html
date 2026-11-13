@@ -134,7 +134,7 @@ const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 let animeRows=[], activeGenre="Semua", selectedAnime=null, adminRows=[];
 const $=id=>document.getElementById(id);
 function safe(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-function switchView(id){["homeView","detailView","watchView","adminView"].forEach(x=>$(x).classList.toggle("hidden",x!==id));$("searchWrap").classList.toggle("hidden",id!=="homeView");window.scrollTo(0,0)}
+function switchView(id){["homeView","directoryView","detailView","watchView","adminView"].forEach(x=>$(x).classList.toggle("hidden",x!==id));$("searchWrap").classList.toggle("hidden",id!=="homeView");window.scrollTo(0,0)}
 function showHome(){switchView("homeView");renderCatalog();if(location.hash!=="")history.replaceState(null,"",location.pathname)}
 function showAdmin(){switchView("adminView");history.replaceState(null,"","#admin");checkSession()}
 function setStatus(msg,type=""){const el=$("adminStatus");el.textContent=msg;el.className="status "+type}
