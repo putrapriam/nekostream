@@ -200,21 +200,35 @@ mask-image:linear-gradient(to right,transparent 0%,black 35%);
   #searchWrap{
   display:flex;
   align-items:center;
-  gap:8px;
+  gap:10px;
+  width:min(430px,42vw);
+  padding:5px 14px;
+  border:1px solid #168BFF;
+  border-radius:30px;
+  background:linear-gradient(110deg,#102B5C,#071B4A);
+  box-shadow:0 0 12px #087BFF66;
+}
+#searchWrap button{
+  width:30px;
+  height:36px;
+  padding:0;
+  border:0;
+  background:transparent;
+  color:white;
+  font-size:25px;
+  flex-shrink:0;
 }
 #searchWrap input{
   flex:1;
   min-width:0;
-}
-#searchWrap button{
-  width:44px;
-  height:44px;
-  border:1px solid #168BFF;
-  border-radius:10px;
-  background:#168BFF;
+  border:0;
+  outline:none;
+  background:transparent;
   color:white;
-  font-size:18px;
-  cursor:pointer;
+  padding:8px 0;
+}
+#searchWrap input::placeholder{
+  color:#b9c9e8;
 }
 </style>
 </head>
@@ -223,8 +237,10 @@ mask-image:linear-gradient(to right,transparent 0%,black 35%);
 <a class="logo" href="#" onclick="showHome();return false"><img src="logo.png" alt="NekoStream" style="height:64px;width:auto;max-width:220px;object-fit:contain"></a>
 <div class="navlinks"><a href="#" onclick="showHome();return false">Beranda</a><a href="#" onclick="showDirectory();return false">Daftar Anime</a><a href="#about">Tentang</a><a href="#admin" onclick="showAdmin();return false">Admin</a></div>
 <div class="search" id="searchWrap">
+  <button type="button" onclick="renderCatalog()">
+    <span>⌕</span>
+  </button>
   <input id="search" placeholder="Cari anime..." oninput="renderCatalog()">
-  <button type="button" onclick="renderCatalog()">🔍</button>
 </div>
 </nav></header>
 <main>
