@@ -38,7 +38,41 @@
     width:100%;
     box-sizing:border-box;
   }
-}</style>
+}
+  /* DAFTAR ANIME A-Z */
+#alphabetNav{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin:15px 0;
+}
+#alphabetNav .filter{
+  min-width:38px;
+  padding:9px;
+  color:#79C8F2;
+  background:#151b26;
+  border:1px solid #2a3546;
+  border-radius:8px;
+  font-weight:700;
+}
+#alphabetNav .filter:active,
+#alphabetNav .filter:focus{
+  background:#79C8F2;
+  color:#10131b;
+}
+#directoryList{
+  display:grid;
+  gap:9px;
+}
+#directoryList .rowitem{
+  padding:14px;
+  background:#151b26;
+  border:1px solid #2a3546;
+  border-radius:9px;
+  color:#eaf6ff;
+  font-weight:700;
+  cursor:pointer;
+} </style>
 </head>
 <body>
 <header class="top"><nav class="nav">
