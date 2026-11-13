@@ -87,6 +87,7 @@ body:has(#directoryView:not(.hidden)) .logo img{
 }
 
 .hero{
+  position:relative;
   display:flex;
   align-items:center;
   justify-content:space-between;
@@ -99,23 +100,43 @@ body:has(#directoryView:not(.hidden)) .logo img{
   box-shadow:0 0 22px #087BFF55;
   padding:30px;
 }
-
+.hero::after{
+  content:"";
+  position:absolute;
+  left:-5%;
+  bottom:0;
+  width:110%;
+  height:22%;
+  background:linear-gradient(110deg,#087BFF,#00D9FF,#3730FF);
+  clip-path:polygon(0 55%,35% 100%,68% 30%,100% 0,100% 100%,0 100%);
+  opacity:.85;
+  z-index:0;
+  pointer-events:none;
+}
 .hero-copy{
-  flex:1;
-  min-width:0;
+    flex:1;
+    min-width:0;
+    position:relative;
+    z-index:2;
 }
 
 .hero-art{
-  flex:0 0 38%;
-  height:280px;
+position:absolute;
+right:0;
+bottom:0;
+width:65%;
+height:100%;
+z-index:1;
+pointer-events:none;
 }
 
 .hero-art img{
   width:100%;
-  height:100%;
-  object-fit:cover;
-  object-position:center;
+  object-fit:contain;
+object-position:right bottom;
   border-radius:16px;
+  -webkit-mask-image:linear-gradient(to right,transparent 0%,black 35%);
+mask-image:linear-gradient(to right,transparent 0%,black 35%);
 }
 .btn{
   box-shadow:0 0 14px #168BFF66;
