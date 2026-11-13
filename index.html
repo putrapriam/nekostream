@@ -197,13 +197,35 @@ mask-image:linear-gradient(to right,transparent 0%,black 35%);
   -webkit-mask-image:linear-gradient(to right,transparent 0%,black 45%);
   mask-image:linear-gradient(to right,transparent 0%,black 45%);
 }
+  #searchWrap{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+#searchWrap input{
+  flex:1;
+  min-width:0;
+}
+#searchWrap button{
+  width:44px;
+  height:44px;
+  border:1px solid #168BFF;
+  border-radius:10px;
+  background:#168BFF;
+  color:white;
+  font-size:18px;
+  cursor:pointer;
+}
 </style>
 </head>
 <body>
 <header class="top"><nav class="nav">
 <a class="logo" href="#" onclick="showHome();return false"><img src="logo.png" alt="NekoStream" style="height:64px;width:auto;max-width:220px;object-fit:contain"></a>
 <div class="navlinks"><a href="#" onclick="showHome();return false">Beranda</a><a href="#" onclick="showDirectory();return false">Daftar Anime</a><a href="#about">Tentang</a><a href="#admin" onclick="showAdmin();return false">Admin</a></div>
-<div class="search" id="searchWrap"><input id="search" placeholder="Cari anime..." oninput="renderCatalog()"></div>
+<div class="search" id="searchWrap">
+  <input id="search" placeholder="Cari anime..." oninput="renderCatalog()">
+  <button type="button" onclick="renderCatalog()">🔍</button>
+</div>
 </nav></header>
 <main>
 <section id="homeView">
