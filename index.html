@@ -7,8 +7,8 @@
 <title>NekoStream</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--bg:#0d1017;--panel:#151b26;--panel2:#1c2634;--line:#2a3546;--txt:#f4f6fb;--muted:#9aa8bb;--pink:#79C8F2;--green:#38c996;--red:#ff687c}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:15px/1.5 system-ui,Arial,sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer}.top{background:#111722;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}.nav{max-width:1100px;margin:auto;padding:13px 16px;display:flex;align-items:center;gap:18px}.logo{font-size:23px;font-weight:950;letter-spacing:-1px;color:white;text-decoration:none}.logo span{color:var(--pink)}.navlinks{display:flex;gap:16px}.navlinks a{color:#c2ccda;text-decoration:none;font-weight:650}.search{margin-left:auto;width:min(300px,42vw)}.search input,.field input,.field textarea,.field select{width:100%;background:#090d13;border:1px solid var(--line);border-radius:8px;color:white;padding:11px 12px;outline:none}.search input:focus,.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--pink)}main{max-width:1100px;margin:22px auto;padding:0 16px}.hero{border:1px solid var(--line);border-radius:14px;padding:28px;background:linear-gradient(110deg,#202b3c,#171c2a 65%,#162d46);margin-bottom:26px}.eyebrow{font-size:11px;letter-spacing:2px;color:#79C8F2;font-weight:900}.hero h1{
+:root{--bg:#050B18;--panel:#0B1B3A;--panel2:#102B5C;--line:#174A8B;--txt:#F7FBFF;--muted:#A9C7E8;--pink:#168BFF;--green:#38c996;--red:#ff687c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:15px/1.5 system-ui,Arial,sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer}.top{background:#111722;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}.nav{max-width:1100px;margin:auto;padding:13px 16px;display:flex;align-items:center;gap:18px}.logo{font-size:23px;font-weight:950;letter-spacing:-1px;color:white;text-decoration:none}.logo span{color:var(--pink)}.navlinks{display:flex;gap:16px}.navlinks a{color:#c2ccda;text-decoration:none;font-weight:650}.search{margin-left:auto;width:min(300px,42vw)}.search input,.field input,.field textarea,.field select{width:100%;background:#090d13;border:1px solid var(--line);border-radius:8px;color:white;padding:11px 12px;outline:none}.search input:focus,.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--pink)}main{max-width:1100px;margin:22px auto;padding:0 16px}.hero{border:1px solid var(--line);border-radius:14px;padding:28px;background:linear-gradient(110deg,#202b3c,#171c2a 65%,#162d46);margin-bottom:26px}.eyebrow{font-size:11px;letter-spacing:2px;color:#62C8FF;font-weight:900}.hero h1{
   font-size:clamp(29px,5vw,44px);
   line-height:1.1;
   margin:8px 0;
@@ -76,7 +76,43 @@
  /* LOGO KHUSUS HALAMAN DAFTAR ANIME */
 body:has(#directoryView:not(.hidden)) .logo img{
   max-height:130px !important;
-} </style>
+} 
+
+/* NEKOSTREAM ELECTRIC BLUE GLOW */
+
+.nav{
+  background:linear-gradient(110deg,#061A43,#092F78,#061A43);
+  border-bottom:1px solid #168BFF;
+  box-shadow:0 5px 25px #087BFF55;
+}
+
+.hero{
+  background:linear-gradient(135deg,#071B4A,#09318D,#06152F);
+  border:1px solid #168BFF;
+  box-shadow:0 0 22px #087BFF55;
+  background-size:200% 200%;
+  animation:blueGlow 8s ease infinite;
+}
+
+.btn{
+  box-shadow:0 0 14px #168BFF66;
+}
+
+.card{
+  border:1px solid #174A8B;
+  box-shadow:0 0 10px #087BFF22;
+}
+
+.card:hover{
+  border-color:#168BFF;
+  box-shadow:0 0 20px #087BFF77;
+}
+
+@keyframes blueGlow{
+  0%,100%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+}
+</style>
 </head>
 <body>
 <header class="top"><nav class="nav">
